@@ -12,6 +12,7 @@ using UnityEngine.Audio;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using mazing.common.Runtime.Extensions;
 using UnityEngine.EventSystems;
 
 [AddComponentMenu("BoneCracker Games/Realistic Car Controller/Main/RCC Realistic Car Controller V3")]
@@ -2030,7 +2031,8 @@ public class RCC_CarControllerV3 : RCC_Core {
 			
 				Vector3 colRelVel = collision.relativeVelocity;
 				colRelVel *= 1f - Mathf.Abs (Vector3.Dot (transform.up, collision.contacts [0].normal));
-				colRelVel *= collision.rigidbody.mass;
+				if (collision.rigidbody.IsNotNull())
+					colRelVel *= collision.rigidbody.mass;
 				float cos = Mathf.Abs (Vector3.Dot (collision.contacts [0].normal, colRelVel.normalized));
 
 				if (colRelVel.magnitude * cos >= minimumCollisionForce) {
