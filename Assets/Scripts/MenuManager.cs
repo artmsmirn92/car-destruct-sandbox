@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using TMPro;
+using Lean.Localization;
+using mazing.common.Runtime.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -19,15 +18,19 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject settingsPanelObj;
     [SerializeField] private GameObject chooseCarPanelObj;
 
-    [SerializeField] private Button          choosePreviousCarButton;
-    [SerializeField] private Button          chooseNextCarButton;
-    [SerializeField] private Image           carImage;
+    [SerializeField] private Button choosePreviousCarButton;
+    [SerializeField] private Button chooseNextCarButton;
+    [SerializeField] private Image  carImage;
 
     [SerializeField] private List<ChooseCarArgs>     chooseCarArgsList;
-    [SerializeField] private List<ChooseStadiumArgs> ChooseStadiumArgsList;
+    [SerializeField] private List<ChooseStadiumArgs> chooseStadiumArgsList;
 
     [SerializeField] private Toggle highQualityGraphicsToggle;
     [SerializeField] private Toggle soundOnToggle;
+
+    [SerializeField] private GameObject       stadiumButtonPrefab;
+    [SerializeField] private ScrollRect       stadiumPanelScrolRect;
+    [SerializeField] private LeanLocalization leanLocalization;
     
     #endregion
 
@@ -40,6 +43,7 @@ public class MenuManager : MonoBehaviour
     #region inject
 
     [Inject] private ISavesController SavesController { get; }
+    [Inject] private ISoundManager    SoundManager    { get; }
 
     #endregion
 
@@ -57,6 +61,8 @@ public class MenuManager : MonoBehaviour
         highQualityGraphicsToggle.isOn = MainData.HighQualityGraphics = SavesController.SoundOn;
         soundOnToggle.isOn             = MainData.SoundOn             = SavesController.SoundOn;
         HideAllPanelsAndShowMainMenuPanel();
+        SetChooseCarPanelState();
+        InitStadiumsPanel();
     }
 
     #endregion
@@ -71,29 +77,22 @@ public class MenuManager : MonoBehaviour
         stadiumsPanelObj.SetActive(true);
     }
 
-    public void CloseStadiumsPanel()
-    {
-        HideAllPanelsAndShowMainMenuPanel();
-    }
-
     public void OpenSettingsPanel()
     {
         HideAllPanels();
         settingsPanelObj.SetActive(true);
+    }
+
+    public void CloseStadiumsPanel()
+    {
+        HideAllPanelsAndShowMainMenuPanel();
     }
     
     public void CloseSettingsPanel()
     {
         HideAllPanelsAndShowMainMenuPanel();
     }
-
-    public void LoadStadium(int _StadiumId)
-    {
-        MainData.StadiumId = _StadiumId;
-        HideAllPanels();
-        chooseCarPanelObj.SetActive(true);
-    }
-
+    
     public void CloseChooseCarPanel()
     {
         HideAllPanels();
@@ -103,24 +102,18 @@ public class MenuManager : MonoBehaviour
     public void ChoosePreviousCar()
     {
         MainData.CarId = Mathf.Clamp(MainData.CarId - 1, 0, GetMaxCarId());
-        choosePreviousCarButton.interactable = MainData.CarId > 0;
-        chooseNextCarButton.interactable = true;
-        MainData.chosenCarArgs = chooseCarArgsList.FirstOrDefault(_Args => _Args.Id == MainData.CarId);
-        SetCarImageAndTextInMenu();
+        SetChooseCarPanelState();
     }
 
     public void ChooseNextCar()
     {
         MainData.CarId = Mathf.Clamp(MainData.CarId + 1, 0, GetMaxCarId());
-        choosePreviousCarButton.interactable = true;
-        chooseNextCarButton.interactable = MainData.CarId < GetMaxCarId();
-        MainData.chosenCarArgs = chooseCarArgsList.FirstOrDefault(_Args => _Args.Id == MainData.CarId);
-        SetCarImageAndTextInMenu();
+        SetChooseCarPanelState();
     }
 
     public void StartLevel()
     {
-        string sceneName = GetStadiumNameById(MainData.StadiumId);
+        string sceneName = MainData.ChooseStadiumArgs.sceneName;
         SceneManager.LoadScene(sceneName);
     }
 
@@ -128,28 +121,40 @@ public class MenuManager : MonoBehaviour
     {
         MainData.IsEnglish = false;
         LanguageChanged?.Invoke();
+        leanLocalization.SetCurrentLanguage("Russian");
     }
 
     public void SetLangEng()
     {
         MainData.IsEnglish = true;
+        leanLocalization.SetCurrentLanguage("English");
         LanguageChanged?.Invoke();
     }
 
     public void SetGraphicsQuality(bool _HighQualityGraphics)
     {
         SavesController.HighQualityGraphics = MainData.HighQualityGraphics = _HighQualityGraphics;
+        QualitySettings.SetQualityLevel(_HighQualityGraphics ? 1 : 0);
     }
 
     public void EnableSound(bool _IsOn)
     {
         SavesController.SoundOn = MainData.SoundOn = _IsOn;
+        SoundManager.EnableAudio(_IsOn);
         audioListener.enabled = _IsOn;
     }
 
     #endregion
 
     #region nonpublic methdos
+
+    private void SetChooseCarPanelState()
+    {
+        choosePreviousCarButton.interactable = MainData.CarId > 0;
+        chooseNextCarButton    .interactable = MainData.CarId < GetMaxCarId();
+        MainData.ChosenCarArgs = chooseCarArgsList[MainData.CarId];
+        carImage.sprite = MainData.ChosenCarArgs.Sprite;
+    }
 
     private void HideAllPanels()
     {
@@ -163,28 +168,31 @@ public class MenuManager : MonoBehaviour
         mainMenuPanelObj.SetActive(true);
     }
 
-    private void SetCarImageAndTextInMenu()
-    {
-        bool isEnglish = false;
-        carImage.sprite = MainData.chosenCarArgs.Sprite;
-    }
-
     private int GetMaxCarId()
     {
         return chooseCarArgsList.Count - 1;
     }
 
-    private static string GetStadiumNameById(int _StadiumId)
+    private void InitStadiumsPanel()
     {
-        return _StadiumId switch
+        stadiumPanelScrolRect.content.DestroyChildrenSafe();
+        foreach (var args in chooseStadiumArgsList)
         {
-            1 => "Stadium 1",
-            2 => "Stadium 2",
-            3 => "Stadium 3",
-            4 => "Stadium 4",
-            5 => "Stadium 5",
-            _ => throw new SwitchExpressionException(_StadiumId)
-        };
+            var buttonGo = Instantiate(stadiumButtonPrefab);
+            buttonGo.SetParent(stadiumPanelScrolRect.content);
+            var buttonView = buttonGo.GetComponent<MenuStadiumButtonView>();
+            buttonView
+                .SetImage(args.sprite)
+                .SetAction(() => OnChooseStadiumButtonClick(args))
+                .SetTitle(LeanLocalization.GetTranslationText(args.stadiumNameLocKey));
+        }
+    }
+    
+    private void OnChooseStadiumButtonClick(ChooseStadiumArgs _Args)
+    {
+        MainData.ChooseStadiumArgs = _Args;
+        HideAllPanels();
+        chooseCarPanelObj.SetActive(true);
     }
 
     #endregion

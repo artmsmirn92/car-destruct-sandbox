@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lean.Localization", "Lean.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCommon", "LeanCommon.csproj", "{79993603-979b-e110-4af1-d028568691d5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProceduralImage", "ProceduralImage.csproj", "{3581cfb7-abe2-dc2e-d294-a8804eae93d3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zenject-TestFramework", "Zenject-TestFramework.csproj", "{3b5159c8-5992-32d1-e0d1-ea70fc0d754b}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zenject-PoolMonitor-Editor", "Zenject-PoolMonitor-Editor.csproj", "{75ccea13-2e41-2b5e-4364-ff6cad3cf7dd}"
@@ -70,6 +72,8 @@ Global
 		{57195acd-e218-9aad-f135-3a98c10c14bf}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79993603-979b-e110-4af1-d028568691d5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79993603-979b-e110-4af1-d028568691d5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3581cfb7-abe2-dc2e-d294-a8804eae93d3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3581cfb7-abe2-dc2e-d294-a8804eae93d3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3b5159c8-5992-32d1-e0d1-ea70fc0d754b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3b5159c8-5992-32d1-e0d1-ea70fc0d754b}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75ccea13-2e41-2b5e-4364-ff6cad3cf7dd}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

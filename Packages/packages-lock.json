@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.coffee.softmask-for-ugui": {
+      "version": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b870d64b5704a764fd03aaccb11f2dbe652b1756"
+    },
     "com.mazing.common": {
       "version": "https://github.com/artmsmirn92/mazing-common.git",
       "depth": 0,
@@ -12,7 +19,13 @@
         "com.unity.modules.androidjni": "1.0.0",
         "com.unity.services.core": "1.8.2"
       },
-      "hash": "0ce6067003c9b87d21ae90a9ea0d1376d3293df7"
+      "hash": "b3074d032db9d57a8ad9294610569d39a9dd9815"
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.adaptiveperformance": {
       "version": "4.0.1",
@@ -92,7 +105,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.6.1",
+      "version": "1.6.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
