@@ -1,4 +1,5 @@
-﻿using mazing.common.Runtime.Extensions;
+﻿using Lean.Localization;
+using mazing.common.Runtime.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,22 +13,26 @@ public class MenuStadiumButtonView : MonoBehaviour
     [SerializeField] private Button          button;
     [SerializeField] private Image           image;
 
+    [SerializeField] private LeanLocalizedTextMeshProUGUI leanLocalized;
+
     #endregion
 
     #region engine methods
 
     private void Start()
     {
-        image.color = Color.white;
+        transform.localScale = Vector3.one;
     }
 
     #endregion
 
     #region api
 
-    public MenuStadiumButtonView SetTitle(string _Title)
+    public MenuStadiumButtonView SetTitle(string _LocalizationKey)
     {
-        title.text = _Title;
+        // var translation = LeanLocalization.GetTranslation(_LocalizationKey);
+        leanLocalized.TranslationName = _LocalizationKey;
+        // leanLocalized.UpdateTranslation(translation);
         return this;
     }
 

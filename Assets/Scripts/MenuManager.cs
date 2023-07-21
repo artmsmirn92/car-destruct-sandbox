@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Lean.Localization;
 using mazing.common.Runtime.Extensions;
+using mazing.common.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -31,6 +34,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject       stadiumButtonPrefab;
     [SerializeField] private ScrollRect       stadiumPanelScrolRect;
     [SerializeField] private LeanLocalization leanLocalization;
+
+    [SerializeField] private CarControllerLevelObjectsScriptableObject carControllerLevelObjects;
     
     #endregion
 
@@ -62,7 +67,7 @@ public class MenuManager : MonoBehaviour
         soundOnToggle.isOn             = MainData.SoundOn             = SavesController.SoundOn;
         HideAllPanelsAndShowMainMenuPanel();
         SetChooseCarPanelState();
-        InitStadiumsPanel();
+        Cor.Run(Cor.WaitNextFrame(InitStadiumsPanel));
     }
 
     #endregion
@@ -113,6 +118,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartLevel()
     {
+        SceneManager.sceneLoaded += OnLevelSceneLoaded;
         string sceneName = MainData.ChooseStadiumArgs.sceneName;
         SceneManager.LoadScene(sceneName);
     }
@@ -184,7 +190,7 @@ public class MenuManager : MonoBehaviour
             buttonView
                 .SetImage(args.sprite)
                 .SetAction(() => OnChooseStadiumButtonClick(args))
-                .SetTitle(LeanLocalization.GetTranslationText(args.stadiumNameLocKey));
+                .SetTitle(args.stadiumNameLocKey);
         }
     }
     
@@ -193,6 +199,20 @@ public class MenuManager : MonoBehaviour
         MainData.ChooseStadiumArgs = _Args;
         HideAllPanels();
         chooseCarPanelObj.SetActive(true);
+    }
+
+    private void OnLevelSceneLoaded(Scene _Scene, LoadSceneMode _LoadSceneMode)
+    {
+        Instantiate(MainData.ChosenCarArgs.Prefab);
+        var carControllerObjetsToInstantiate = MainData.ChosenCarArgs.CarControllerType switch
+        {
+            ECarControllerType.RCC => carControllerLevelObjects.rccLevelObjects,
+            ECarControllerType.UCC => carControllerLevelObjects.uccLevelObjects,
+            _                      => throw new SwitchExpressionException(MainData.ChosenCarArgs.CarControllerType)
+        };
+        foreach (var go in carControllerObjetsToInstantiate)
+            Instantiate(go);
+        SceneManager.sceneLoaded -= OnLevelSceneLoaded;
     }
 
     #endregion
