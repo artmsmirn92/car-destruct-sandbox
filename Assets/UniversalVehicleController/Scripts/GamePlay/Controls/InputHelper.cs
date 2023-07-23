@@ -10,7 +10,7 @@ namespace PG
 
         #region Keyboard
 
-        public static bool EscapeWasPresed => Input.GetKeyDown (KeyCode.Escape);
+        public static bool EscapeWasPresed => false; // FIXME
 
         #endregion //Keyboard
 

@@ -10,7 +10,7 @@ public class MenuStadiumButtonView : MonoBehaviour
     #region serialized fields
 
     [SerializeField] private TextMeshProUGUI title;
-    [SerializeField] private Button          button;
+    public Button          button;
     [SerializeField] private Image           image;
 
     [SerializeField] private LeanLocalizedTextMeshProUGUI leanLocalized;

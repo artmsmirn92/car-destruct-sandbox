@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using mazing.common.Runtime.Utils;
 using UnityEngine;
 
 namespace PG
@@ -19,10 +20,14 @@ namespace PG
             {
                 get
                 {
+                    
+#if UNITY_WEBGL
+                    return CommonUtils.IsOnMobileWebGl();
+#endif
+                    
 #if UNITY_EDITOR
-
                     return UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android ||
-                        UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS;
+                           UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS;
 #else
                 return Application.isMobilePlatform;
 #endif

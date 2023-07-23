@@ -46,9 +46,9 @@ namespace PG
         {
             MainParent.SetActive (!CanHideMainMenu);
 
-            if (!GameSettings.IsMobilePlatform)
+            if (!GameSettings.IsMobilePlatform && !MainData.IsInLevelMenu)
             {
-                Cursor.lockState = CanHideMainMenu? CursorMode: CursorLockMode.None;
+                // Cursor.lockState = CanHideMainMenu? CursorMode: CursorLockMode.None;
             }
 
             foreach (var bs in ButtonScenes)
@@ -136,7 +136,7 @@ namespace PG
                 var mainPaerentEnable = SceneManager.sceneCountInBuildSettings > 1 && !MainParent.activeSelf;
                 MainParent.SetActive(mainPaerentEnable);
 
-                if (!GameSettings.IsMobilePlatform)
+                if (!GameSettings.IsMobilePlatform && !MainData.IsInLevelMenu)
                 {
                     Cursor.lockState = mainPaerentEnable ? CursorLockMode.None : CursorMode;
                 }

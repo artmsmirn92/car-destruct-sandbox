@@ -30,9 +30,9 @@ namespace PG
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode SwitchLeftTurnLightsKey = KeyCode.Q;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode SwitchRightTurnLightsKey = KeyCode.E;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode SwitchAlarmKey = KeyCode.X;
-        [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode ConnectTrailerKey = KeyCode.T;
+        [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode ConnectTrailerKey = KeyCode.Y;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode ResetCarKey = KeyCode.R;
-        [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode RestoreCarKey = KeyCode.F2;
+        [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode RestoreCarKey = KeyCode.T;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode ChangeViewKey = KeyCode.C;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode HandBrakeKey = KeyCode.Space;
         [HideInInspectorIf("UseBindingsFromInputManager")] public KeyCode BoostKey = KeyCode.LeftAlt;
