@@ -7,6 +7,9 @@ TagManager:
   - Underside
   - MainLight
   - Fire
+  - ship
+  - asteroid
+  - Start Spawn
   layers:
   - Default
   - TransparentFX

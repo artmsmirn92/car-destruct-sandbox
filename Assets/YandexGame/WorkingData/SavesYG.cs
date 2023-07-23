@@ -20,6 +20,7 @@ namespace YG
 
         public bool soundOn;
         public bool highQualityGraphics;
+        public bool doNotshowHowToScrollStadiumsInPanel;
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
         // Пока выявленное ограничение - это расширение массива

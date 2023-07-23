@@ -2,8 +2,9 @@
 
 public interface ISavesController
 {
-    bool SoundOn             { get; set; }
-    bool HighQualityGraphics { get; set; }
+    bool SoundOn                        { get; set; }
+    bool HighQualityGraphics            { get; set; }
+    bool ShowHowToScrollStadiumsInPanel { get; set; }
 }
     
 public class SavesControllerYandexGames : ISavesController
@@ -26,5 +27,15 @@ public class SavesControllerYandexGames : ISavesController
             YandexGame.savesData.highQualityGraphics = value;
             YandexGame.SaveProgress();
         }
-    }   
+    }
+
+    public bool ShowHowToScrollStadiumsInPanel
+    {
+        get => YandexGame.savesData.doNotshowHowToScrollStadiumsInPanel;
+        set
+        {
+            YandexGame.savesData.doNotshowHowToScrollStadiumsInPanel = value;
+            YandexGame.SaveProgress();
+        }
+    }
 }

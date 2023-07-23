@@ -29,6 +29,7 @@ public class MainMenuController : MenuControllerBase
     [SerializeField] private ScrollRectButtonStateFix scrollRectButtonStateFix;
 
     [SerializeField] private CarControllerLevelObjectsScriptableObject carControllerLevelObjects;
+    [SerializeField] private GameObject                                howToScrollStadiumsPanelGo;
     
     #endregion
 
@@ -53,6 +54,7 @@ public class MainMenuController : MenuControllerBase
         };
         HideAllPanelsAndShowMainMenuPanel();
         SetChooseCarPanelState();
+        howToScrollStadiumsPanelGo.SetActive(!SavesController.ShowHowToScrollStadiumsInPanel);
         Cor.Run(Cor.WaitNextFrame(InitStadiumsPanel));
     }
 
@@ -106,6 +108,12 @@ public class MainMenuController : MenuControllerBase
         SceneManager.sceneLoaded += OnLevelSceneLoaded;
         string sceneName = MainData.ChooseStadiumArgs.sceneName;
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void GotItHowToScrollStadiumsInPanel()
+    {
+        howToScrollStadiumsPanelGo.SetActive(false);
+        SavesController.ShowHowToScrollStadiumsInPanel = true;
     }
 
     #endregion
@@ -162,7 +170,10 @@ public class MainMenuController : MenuControllerBase
 
     private void OnLevelSceneLoaded(Scene _Scene, LoadSceneMode _LoadSceneMode)
     {
-        Instantiate(MainData.ChosenCarArgs.Prefab);
+        // var carGo = Instantiate(MainData.ChosenCarArgs.Prefab);
+        // var spawnTr = GameObject.FindWithTag("Start Spawn").transform;
+        // carGo.transform.position = spawnTr.position;
+        // carGo.transform.rotation = spawnTr.rotation;
         var carControllerObjetsToInstantiate = MainData.ChosenCarArgs.CarControllerType switch
         {
             ECarControllerType.RCC => carControllerLevelObjects.rccLevelObjects,

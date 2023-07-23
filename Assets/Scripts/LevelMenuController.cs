@@ -39,6 +39,7 @@ public class LevelMenuController : MenuControllerBase
     public void RepairCar()
     {
         FindObjectOfType<CarControllerInput>().RestoreCar();
+        EnableLevelMenu(false);
     }
 
     public void BackToMainMenu()
