@@ -12,11 +12,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 04cedb5a3809f1f439c8fc0d49025f3a
   - enabled: 1
-    path: Assets/Scenes/Polygon 01.unity
+    path: Assets/Scenes/Level Scenes/Level 01 - Polygon 01.unity
     guid: b3568f9ddd811f84db749d7807fd129d
   - enabled: 1
-    path: Assets/Scenes/Polygon 02.unity
+    path: Assets/Scenes/Level Scenes/Level 02 - Polygon 02.unity
     guid: 200af354a9d9ae54580cc859e5cbaf72
+  - enabled: 1
+    path: Assets/Scenes/Level Scenes/Level 03 - Mountain Drift.unity
+    guid: 2901f4b6699945b48ab0350334a10556
+  - enabled: 1
+    path: Assets/Scenes/Level Scenes/Level 04 - Docks.unity
+    guid: 0f2d6bb692931454fbfa948e297f9fa7
+  - enabled: 1
+    path: Assets/Scenes/Level Scenes/Level 05 - Polygon 03.unity
+    guid: 398568940a827a14d9f88f3f9c185f85
+  - enabled: 1
+    path: Assets/Scenes/Level Scenes/Level 06 - City.unity
+    guid: 38ab476a218628e4097c2b68f93d3762
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
       guid: 7f9f6113d55a97c4a9cde0349550d875, type: 2}

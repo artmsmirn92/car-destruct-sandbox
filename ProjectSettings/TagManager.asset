@@ -10,6 +10,7 @@ TagManager:
   - ship
   - asteroid
   - Start Spawn
+  - First Car On Start
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Floor
   - Press
   - TubeBall
-  - 
+  - MaceBall
   - 
   - 
   - 
