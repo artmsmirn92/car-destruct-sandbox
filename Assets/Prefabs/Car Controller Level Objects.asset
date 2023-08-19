@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rccLevelObjects:
     array:
-    - {fileID: 102148, guid: 3c49455ff7757444fa4b466c3250f423, type: 3}
-    - {fileID: 179684, guid: 9f32ea4a11500b344ae05427bdc21e05, type: 3}
-    - {fileID: 1000014008404042, guid: 330409232e97fd84c9b2e696d6de0bd5, type: 3}
-    - {fileID: 121460, guid: e33cb74b36f03154fbe8044f3d5a7842, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   uccLevelObjects:
     array:
     - {fileID: 7092614821741295191, guid: 7859f4d4c0d0d9f45aedab0d24aa3c63, type: 3}

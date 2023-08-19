@@ -12,6 +12,7 @@ public class MenuCarsInstancer : MonoBehaviour
     [SerializeField] private List<Transform>  spawnTrs;
     [SerializeField] private List<GameObject> carPrefabs;
     [SerializeField] private float            spawnPeriod;
+    [SerializeField] private int              maxSpawnedCarsCount = 3;
 
     #endregion
 
@@ -26,18 +27,16 @@ public class MenuCarsInstancer : MonoBehaviour
     private float m_SpawnTimer;
     private int   m_SpawnTrId;
     private int   m_CarPrefabId;
+    private int   m_SpawnCarCount;
 
     #endregion
 
     #region engine methods
 
-    private void Start()
-    {
-        m_SpawnTimer = spawnPeriod;
-    }
-    
     private void Update()
     {
+        if (m_SpawnCarCount >= maxSpawnedCarsCount)
+            return;
         m_SpawnTimer += Time.deltaTime;
         if (m_SpawnTimer < spawnPeriod)
             return;
@@ -51,9 +50,8 @@ public class MenuCarsInstancer : MonoBehaviour
 
     private void SpawnCar()
     {
-        float RandAng() => Random.value * 360f;
-        var randomRotation = Quaternion.Euler(RandAng(), RandAng(), RandAng());
-        var carGo = Instantiate(carPrefabs[m_CarPrefabId], spawnTrs[m_SpawnTrId].position, randomRotation);
+        m_SpawnCarCount++;
+        var carGo = Instantiate(carPrefabs[m_CarPrefabId], spawnTrs[m_SpawnTrId]);
         carGo.transform.position = spawnTrs[m_SpawnTrId].position;
         m_CarPrefabId = MathUtils.ClampInverse(m_CarPrefabId + 1, 0, carPrefabs.Count - 1);
         m_SpawnTrId   = MathUtils.ClampInverse(m_SpawnTrId   + 1, 0, spawnTrs.Count   - 1);
@@ -67,5 +65,4 @@ public class MenuCarsInstancer : MonoBehaviour
     }
 
     #endregion
-
 }

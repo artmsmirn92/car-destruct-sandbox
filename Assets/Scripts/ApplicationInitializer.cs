@@ -1,11 +1,15 @@
-﻿using mazing.common.Runtime.Constants;
+﻿using System.Collections;
+using mazing.common.Runtime.Constants;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YG;
 
 public class ApplicationInitializer : MonoBehaviour
 {
-    private void Start()
+    private IEnumerator Start()
     {
+        while (!YandexGame.SDKEnabled)
+            yield return null;
         SceneManager.LoadScene(SceneNames.Menu);
     }
 }

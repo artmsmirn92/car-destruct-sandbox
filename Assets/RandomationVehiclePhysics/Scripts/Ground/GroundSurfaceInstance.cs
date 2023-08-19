@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using mazing.common.Runtime.Utils;
 
 namespace RVP
 {
@@ -15,7 +16,9 @@ namespace RVP
         [System.NonSerialized]
         public float friction;
 
-        void Start() {
+        private IEnumerator Start()
+        {
+            yield return Cor.WaitNextFrame(null, _FramesNum: 2);
             // Set friction
             if (GroundSurfaceMaster.surfaceTypesStatic[surfaceType].useColliderFriction) {
                 PhysicMaterial sharedMat = GetComponent<Collider>().sharedMaterial;

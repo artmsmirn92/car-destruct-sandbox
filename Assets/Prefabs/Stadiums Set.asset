@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8035caded4e644dca8c22842dd71d22a, type: 3}
+  m_Name: Stadiums Set
+  m_EditorClassIdentifier: 
+  stadiumsSet:
+    array:
+    - lockedByDefault: 0
+      stadiumNameLocKey: polygon_01
+      sceneName: Level 01 - Polygon 01
+      sprite: {fileID: 21300000, guid: 8f3030af000482344b08f0aba9eecf42, type: 3}
+    - lockedByDefault: 0
+      stadiumNameLocKey: polygon_02
+      sceneName: Level 02 - Polygon 02
+      sprite: {fileID: 21300000, guid: 7efc7daabe0e7af4889a4040f2f4804b, type: 3}
+    - lockedByDefault: 1
+      stadiumNameLocKey: drift_with_ai
+      sceneName: Level 03 - Mountain Drift
+      sprite: {fileID: 21300000, guid: 35c3ce224d9a24849ad97de3a6872520, type: 3}
+    - lockedByDefault: 0
+      stadiumNameLocKey: docks
+      sceneName: Level 04 - Docks
+      sprite: {fileID: 21300000, guid: ae35ddfc75ae0a446b75ae348a1ea05f, type: 3}
+    - lockedByDefault: 1
+      stadiumNameLocKey: trackmania
+      sceneName: Level 05 - Polygon 03
+      sprite: {fileID: 21300000, guid: 1ac29d73842959c4b889c973b468326a, type: 3}
+    - lockedByDefault: 1
+      stadiumNameLocKey: city
+      sceneName: Level 06 - City
+      sprite: {fileID: 21300000, guid: 20d0b1deae5081a45befea0fd773faf0, type: 3}

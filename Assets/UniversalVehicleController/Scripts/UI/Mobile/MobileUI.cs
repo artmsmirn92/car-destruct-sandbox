@@ -10,7 +10,6 @@ namespace PG.UI
     {
         public CarControllerInput UserInput;
         public PlayerController PlayerController;
-        public TextMeshProUGUI CurrentControlText;
         public List<BaseControls> AllControls;
 
         [Header("Buttons")]
@@ -59,7 +58,8 @@ namespace PG.UI
                 PlayerController = GetComponentInParent<PlayerController> ();
             }
 
-            SelectNextControl.onClick.AddListener (OnSelectNextControl);
+            if (SelectNextControl)
+                SelectNextControl.onClick.AddListener (OnSelectNextControl);
             SelectedIndex = PlayerPrefs.GetInt ("MobileControlsIndex", 0);
             SelectControl (SelectedIndex);
 
@@ -140,7 +140,6 @@ namespace PG.UI
                 AllControls[i].SetActive (index == i);
                 if (AllControls[i].gameObject.activeInHierarchy)
                 {
-                    CurrentControlText.text = AllControls[i].name;
                 }
             }
         }

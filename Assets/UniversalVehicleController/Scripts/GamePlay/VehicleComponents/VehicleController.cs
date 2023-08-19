@@ -189,6 +189,7 @@ namespace PG
 
         public virtual void RestoreVehicle ()
         {
+            LevelManager.Instance.IsCarDeadChecked = false;
             var damageController = GetComponent <VehicleDamageController>();
             if (damageController)
             {

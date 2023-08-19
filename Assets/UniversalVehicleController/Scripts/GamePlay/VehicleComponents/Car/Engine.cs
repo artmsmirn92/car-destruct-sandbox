@@ -44,6 +44,12 @@ namespace PG
         float MaxMotorTorque;
         float CutOffTimer;
         bool InCutOff;
+        
+        public override void RestoreVehicle ()
+        {
+            BoostAmount = Engine.BoostAmount;
+            base.RestoreVehicle();
+        }
 
         public float CurrentAcceleration { get; private set; }
         public float CurrentTurbo { get; private set; }

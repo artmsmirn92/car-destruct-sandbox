@@ -17,18 +17,18 @@ public class ScrollRectButtonStateFix : MonoBehaviour, IBeginDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData _EventData)
     {
-        foreach (var button in buttons)
-        {
-            button.OnDeselect(_EventData);
-            // button.animator.ResetTrigger("Normal");
-        }
+        // foreach (var button in buttons)
+        // {
+        //     button.OnDeselect(_EventData);
+        //     // button.animator.ResetTrigger("Normal");
+        // }
     }
 
     public void OnEndDrag(PointerEventData _EventData)
     {
-        foreach (var button in buttons)
-        {
-            button.OnPointerUp(_EventData);
-        }
+        // foreach (var button in buttons)
+        // {
+        //     button.OnPointerUp(_EventData);
+        // }
     }
 }

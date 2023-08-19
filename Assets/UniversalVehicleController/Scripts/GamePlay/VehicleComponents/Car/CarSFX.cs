@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using mazing.common.Runtime.Extensions;
 using UnityEngine;
+using YG;
 
 namespace PG
 {
@@ -51,10 +53,22 @@ namespace PG
         float[] EngineSourcesRanges = new float[1] { 1f };
         List<AudioSource> EngineSources = new List<AudioSource>();
 
+        protected override void OnMainDataSoundOnEvent(bool _Enable)
+        {
+            if (EngineSourceRef.IsNotNull())
+                EngineSourceRef.mute = !_Enable;
+            if (TurboSource.IsNotNull())
+                TurboSource.mute = !_Enable;
+            if (BoostSource.IsNotNull())
+                BoostSource.mute = !_Enable;
+            if (SpeedWindSource.IsNotNull())
+                SpeedWindSource.mute = !_Enable;
+            base.OnMainDataSoundOnEvent(_Enable);
+        }
+
         protected override void Start ()
         {
             base.Start ();
-
             Car = Vehicle as CarController;
 
             if (Car == null)
@@ -137,6 +151,7 @@ namespace PG
                         {
                             engineSource = Instantiate (EngineSourceRef, EngineSourceRef.transform.parent);
                             engineSource.clip = engineClips[i];
+                            engineSource.mute = !AudioOn;
                             engineSource.Play ();
                         }
 
@@ -174,7 +189,7 @@ namespace PG
 
         void StartEngine (float startDellay)
         {
-            if (StartEngineClip != null)
+            if (StartEngineClip != null && AudioOn)
             {
                 OtherEffectsSource.PlayOneShot (StartEngineClip);
             }
@@ -182,7 +197,7 @@ namespace PG
 
         void StopEngine ()
         {
-            if (StopEngineClip != null)
+            if (StopEngineClip != null && AudioOn)
             {
                 OtherEffectsSource.PlayOneShot (StartEngineClip);
             }
@@ -206,7 +221,11 @@ namespace PG
                     {
                         EngineSources[i].pitch = pith;
 
-                        if (i > 0 && rpmNorm < EngineSourcesRanges[i - 1])
+                        if (!MainData.IsSoundOn)
+                        {
+                            EngineSources[i].volume = 0f;
+                        }
+                        else if (i > 0 && rpmNorm < EngineSourcesRanges[i - 1])
                         {
                             EngineSources[i].volume = Mathf.InverseLerp (0.2f, 0, EngineSourcesRanges[i - 1] - rpmNorm);
                         }
@@ -226,7 +245,8 @@ namespace PG
 
                         if (EngineSources[i].volume > 0 && !EngineSources[i].isPlaying)
                         {
-                            EngineSources[i].Play ();
+                            if (AudioOn)
+                                EngineSources[i].Play ();
                         }
                     }
                 }
@@ -258,11 +278,15 @@ namespace PG
         {
             if (Car.Engine.EnableTurbo && TurboSource && TurboSource.gameObject.activeInHierarchy)
             {
-                TurboSource.volume = Mathf.Lerp (0, MaxTurboVolume, Car.CurrentTurbo);
+                if (!MainData.IsSoundOn)
+                    TurboSource.volume = 0f;
+                else
+                    TurboSource.volume = Mathf.Lerp (0, MaxTurboVolume, Car.CurrentTurbo);
                 TurboSource.pitch = Mathf.Lerp (MinTurboPith, MaxTurboPith, Car.CurrentTurbo);
                 if (Car.CurrentTurbo > 0.2f && (Car.CurrentAcceleration < 0.2f || Car.InChangeGear) && ((Time.realtimeSinceStartup - LastBlowOffTime) > MinTimeBetweenBlowOffSounds))
                 {
-                    OtherEffectsSource.PlayOneShot (TurboBlowOffClip, Car.CurrentTurbo * MaxBlowOffVolume);
+                    float volC = MainData.IsSoundOn ? 1f : 0f;
+                    OtherEffectsSource.PlayOneShot (TurboBlowOffClip, Car.CurrentTurbo * MaxBlowOffVolume * volC);
                     LastBlowOffTime = Time.realtimeSinceStartup;
                 }
             }
@@ -304,9 +328,10 @@ namespace PG
 
         void OnBackFire ()
         {
+            float volC = MainData.IsSoundOn ? 1f : 0f;
             if (BackFireClips != null && BackFireClips.Count > 0)
             {
-                OtherEffectsSource.PlayOneShot (BackFireClips[Random.Range (0, BackFireClips.Count - 1)]);
+                OtherEffectsSource.PlayOneShot (BackFireClips[Random.Range (0, BackFireClips.Count - 1)], volC);
             }
         }
     }

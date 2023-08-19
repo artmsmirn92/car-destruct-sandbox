@@ -37,7 +37,7 @@ namespace PG
         public List<MeshCollider> IgnoreDeformColliders = new List<MeshCollider>();
         public List<Transform> IgnoreFindInChildsMeshesAndColliders = new List<Transform>();
 
-        [SerializeField] bool EnableLogAndGizmo;                     //Ñollision log and gizmo for debug.
+        [SerializeField] bool EnableLogAndGizmo;                     //ï¿½ollision log and gizmo for debug.
 
 #pragma warning restore 0649
 
@@ -47,7 +47,7 @@ namespace PG
         DamageMeshData[] DamageableMeshes;
 
         DetachableObject[] DetachableObjects;
-        DamageableObjectData[] DamageableObjects;
+        [HideInInspector] public DamageableObjectData[] DamageableObjects;
         MoveableDO[] MoveObjects;
 
         Vector3 LocalCenterPoint;
@@ -310,7 +310,7 @@ namespace PG
             Vector3 localDamagePoint;
             Vector3 localDamageForceAndSurfaceDot;
 
-            //Ñalculate all the necessary values.
+            //ï¿½alculate all the necessary values.
             Vector3 clampForce = Vector3.ClampMagnitude(damageForce, MaxCollisionMagnitude);                                //Limiting force if force exceeds maximum.
             Vector3 normalizedForce = clampForce.normalized;
             float forceMagFactor = clampForce.magnitude * DamageFactor * data.MassFactor;                                   //Accept all existing factors.
@@ -716,7 +716,7 @@ namespace PG
         public float DamageMultiplier;
     }
 
-    struct DamageableObjectData
+    public struct DamageableObjectData
     {
         public DamageableObject DamageableObject;
 

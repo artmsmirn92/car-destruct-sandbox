@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using mazing.common.Runtime.Extensions;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace PG
@@ -10,6 +12,21 @@ namespace PG
 
 #pragma warning disable 0649
 
+        [SerializeField] private Button buttonPause;
+[SerializeField] private Button buttonSlowDownTime;
+
+public MobileButtonsPanel SetButtonPauseAction(UnityAction _Action)
+{
+    buttonPause.SetOnClick(_Action);
+    return this;
+}
+
+public MobileButtonsPanel SetButtonSlowdownTimeAction(UnityAction _Action)
+{
+    buttonSlowDownTime.SetOnClick(_Action);
+    return this;
+}
+        
         [SerializeField] float CloseY;
         [SerializeField] float OpenY;
         [SerializeField] float OpenCloseSpeed = 1000;
@@ -76,3 +93,18 @@ namespace PG
         }
     }
 }
+
+// [SerializeField] private Button buttonPause;
+// [SerializeField] private Button buttonSlowDownTime;
+//
+// public MobileButtonsPanel SetButtonPauseAction(UnityAction _Action)
+// {
+//     buttonPause.SetOnClick(_Action);
+//     return this;
+// }
+//
+// public MobileButtonsPanel SetButtonSlowdownTimeAction(UnityAction _Action)
+// {
+//     buttonSlowDownTime.SetOnClick(_Action);
+//     return this;
+// }

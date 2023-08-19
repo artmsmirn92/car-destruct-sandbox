@@ -13,6 +13,7 @@ public class GlobalMonoInstaller : MonoInstaller
         Container.Bind<ISavesController>() .To<SavesControllerYandexGames>().AsSingle();
         Container.Bind<ICommonTicker>()    .To<CommonTicker>()    .AsSingle();
         Container.Bind<IUITicker>()        .To<UITicker>()        .AsSingle();
+        Container.Bind<IViewGameTicker>()  .To<ViewGameTicker>()  .AsSingle();
         Container.Bind<ISoundManager>()    .To<SoundManager>()    .AsSingle();
         Container.Bind<IPrefabSetManager>().To<PrefabSetManager>().AsSingle();
         Container.Bind<LeanLocalization>().FromComponentInNewPrefab(leanLocalization).AsSingle();

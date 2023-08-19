@@ -19,23 +19,48 @@ namespace PG.UI
         {
             base.Init (userInput);
 
-            AccelerationBtn.OnPointerDownAction += (() => UserInput.SetAcceleration (1));
-            AccelerationBtn.OnPointerUpAction += (() => UserInput.SetAcceleration (0));
+            AccelerationBtn.OnPointerDownAction += StartAccelerate;
+            AccelerationBtn.OnPointerUpAction += StopAccelerate;
 
-            BrakeReverseBtn.OnPointerDownAction += (() => UserInput.SetBrakeReverse (1));
-            BrakeReverseBtn.OnPointerUpAction += (() => UserInput.SetBrakeReverse (0));
+            BrakeReverseBtn.OnPointerDownAction += () => UserInput.SetBrakeReverse (1);
+            BrakeReverseBtn.OnPointerUpAction += () => UserInput.SetBrakeReverse (0);
 
-            LeftSteerBtn.OnPointerEnterAction += (() => UserInput.SetSteer (-1));
-            LeftSteerBtn.OnPointerExitAction += (() => UserInput.SetSteer (0));
+            LeftSteerBtn.OnPointerEnterAction += SteerLeft;
+            LeftSteerBtn.OnPointerExitAction += ResetSteer;
 
-            RightSteerBtn.OnPointerEnterAction += (() => UserInput.SetSteer (1));
-            RightSteerBtn.OnPointerExitAction += (() => UserInput.SetSteer (0));
+            RightSteerBtn.OnPointerEnterAction += SteerRight;
+            RightSteerBtn.OnPointerExitAction += ResetSteer;
 
-            HandBrakeBtn.OnPointerEnterAction += (() => UserInput.SetHandBrake (true));
-            HandBrakeBtn.OnPointerExitAction += (() => UserInput.SetHandBrake (false));
+            HandBrakeBtn.OnPointerEnterAction += () => UserInput.SetHandBrake (true);
+            HandBrakeBtn.OnPointerExitAction += () => UserInput.SetHandBrake (false);
 
-            BoostBtn.OnPointerEnterAction += (() => UserInput.SetBoost (true));
-            BoostBtn.OnPointerExitAction += (() => UserInput.SetBoost (false));
+            BoostBtn.OnPointerEnterAction += () => UserInput.SetBoost (true);
+            BoostBtn.OnPointerExitAction += () => UserInput.SetBoost (false);
+        }
+
+        private void StartAccelerate()
+        {
+            UserInput.SetAcceleration(1f);
+        }
+
+        private void StopAccelerate()
+        {
+            UserInput.SetAcceleration(0f);
+        }
+
+        private void SteerLeft()
+        {
+            UserInput.SetSteer(-1f);
+        }
+
+        private void SteerRight()
+        {
+            UserInput.SetSteer(1f);
+        }
+
+        private void ResetSteer()
+        {
+            UserInput.SetSteer(0f);
         }
     }
 }

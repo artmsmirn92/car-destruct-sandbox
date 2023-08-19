@@ -49,7 +49,8 @@ public class SoundManager : InitBase, ISoundManager
 
     private static void EnableAudioCore(bool _Enable)
     {
-        Object.FindObjectOfType<AudioListener>().enabled = _Enable;
+        MainData.IsSoundOn = _Enable;
+        // AudioListener.pause = !_Enable;
     }
 
     #endregion

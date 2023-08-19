@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using mazing.common.Runtime.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -50,7 +51,7 @@ namespace PG
             var allCars = FindObjectsOfType<CarController> ().ToList ();
             AllCars.AddRange (allCars.Where(c => !AllCars.Contains(c)));
 
-
+            FixCarSelectionOnStart();
 
             if (!PlayerCar1 && AllCars.Count == 0)
             {
@@ -92,11 +93,6 @@ namespace PG
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
-        private void Update ()
-        {
-            
-        }
-
         public void SetNextCar ()
         {
             if (PlayerCar1)
@@ -114,6 +110,8 @@ namespace PG
         void UpdateSelectedCars ()
         {
             Player1 = UpdateSelectedCar (Player1, PlayerCar1);
+            if (LevelManager.Instance.IsNotNull())
+                LevelManager.Instance.VehicleDamageController = Player1.Car.GetComponent<VehicleDamageController>();
             if (SplitScreen)
             {
                 Player2 = UpdateSelectedCar (Player2, PlayerCar2);
@@ -158,6 +156,13 @@ namespace PG
             }
 
             SoundHelper.ChangeSoundTimeScale (Time.timeScale);
+        }
+        
+        private void FixCarSelectionOnStart()
+        {
+            AllCars = AllCars
+                .OrderByDescending(_C => _C.CompareTag("First Car On Start"))
+                .ToList();
         }
     }
 

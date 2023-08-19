@@ -5,24 +5,24 @@ using mazing.common.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using YG;
 
 public class MainMenuController : MenuControllerBase
 {
     #region serialized fields
-
-    [SerializeField] private AudioListener audioListener;
     
     [SerializeField] private GameObject mainMenuPanelObj;
     [SerializeField] private GameObject stadiumsPanelObj;
     [SerializeField] private GameObject settingsPanelObj;
     [SerializeField] private GameObject chooseCarPanelObj;
+    [SerializeField] private GameObject loadingLevelPanelObj;
 
     [SerializeField] private Button choosePreviousCarButton;
     [SerializeField] private Button chooseNextCarButton;
     [SerializeField] private Image  carImage;
 
-    [SerializeField] private List<ChooseCarArgs>     chooseCarArgsList;
-    [SerializeField] private List<ChooseStadiumArgs> chooseStadiumArgsList;
+    [SerializeField] private List<ChooseCarArgs>        chooseCarArgsList;
+    [SerializeField] private StadiumSetScriptableObject stadiumsSetScrObj;
     
     [SerializeField] private GameObject               stadiumButtonPrefab;
     [SerializeField] private ScrollRect               stadiumPanelScrolRect;
@@ -35,7 +35,9 @@ public class MainMenuController : MenuControllerBase
 
     #region nonpublic members
 
-    private List<GameObject> m_PanelsList;
+    private List<GameObject>    m_PanelsList;
+    private List<RectTransform> m_StadiumButtonsRtrs = new();
+    private float               m_AspectRatioChecked;
 
     #endregion
 
@@ -43,6 +45,9 @@ public class MainMenuController : MenuControllerBase
 
     protected override void Start()
     {
+        YandexGame.ResetSaveProgress();
+        YandexGame.SaveProgress();
+        IsOnStart = true;
         SoundManager.Init();
         base.Start();
         m_PanelsList = new List<GameObject>
@@ -50,19 +55,31 @@ public class MainMenuController : MenuControllerBase
             mainMenuPanelObj,
             stadiumsPanelObj,
             settingsPanelObj,
-            chooseCarPanelObj
+            chooseCarPanelObj,
+            loadingLevelPanelObj
         };
         HideAllPanelsAndShowMainMenuPanel();
         SetChooseCarPanelState();
-        howToScrollStadiumsPanelGo.SetActive(!SavesController.ShowHowToScrollStadiumsInPanel);
+        howToScrollStadiumsPanelGo.SetActive(!SavesController.DoNotShowHowToScrollStadiumsInPanel);
+        if (SavesController.Language == "English")
+            SetLangEng();
+        else SetLangRus();
+        Cor.Run(Cor.WaitNextFrame(() => SoundManager.EnableAudio(SavesController.SoundOn)));
         Cor.Run(Cor.WaitNextFrame(InitStadiumsPanel));
+        IsOnStart = false;
+    }
+
+    private void Update()
+    {
+        if (!Mathf.Approximately(GraphicUtils.AspectRatio, m_AspectRatioChecked))
+            KeepStadiumButtonsAspectRatio();
+        m_AspectRatioChecked = GraphicUtils.AspectRatio;
     }
 
     #endregion
     
     #region api
-
-
+    
     public void OpenStadiumsPanel()
     {
         HideAllPanels();
@@ -113,12 +130,25 @@ public class MainMenuController : MenuControllerBase
     public void GotItHowToScrollStadiumsInPanel()
     {
         howToScrollStadiumsPanelGo.SetActive(false);
-        SavesController.ShowHowToScrollStadiumsInPanel = true;
+        SavesController.DoNotShowHowToScrollStadiumsInPanel = true;
+    }
+
+    public void ClearSaves()
+    {
+        SavesController.ResetProgress();
     }
 
     #endregion
 
     #region nonpublic methdos
+
+    private void KeepStadiumButtonsAspectRatio()
+    {
+        foreach (var rTr in m_StadiumButtonsRtrs)
+        {
+            rTr.sizeDelta = rTr.sizeDelta.SetX(stadiumPanelScrolRect.content.rect.height * 0.6f);
+        }
+    }
 
     private void SetChooseCarPanelState()
     {
@@ -148,40 +178,53 @@ public class MainMenuController : MenuControllerBase
     private void InitStadiumsPanel()
     {
         stadiumPanelScrolRect.content.DestroyChildrenSafe();
-        foreach (var args in chooseStadiumArgsList)
+        int idx = 0;
+        foreach (var args in stadiumsSetScrObj.stadiumsSet)
         {
             var buttonGo = Instantiate(stadiumButtonPrefab);
             buttonGo.SetParent(stadiumPanelScrolRect.content);
             var buttonView = buttonGo.GetComponent<MenuStadiumButtonView>();
-            scrollRectButtonStateFix.buttons.Add(buttonView.button);
+            scrollRectButtonStateFix.buttons.Add(buttonView.Button);
             buttonView
                 .SetImage(args.sprite)
-                .SetAction(() => OnChooseStadiumButtonClick(args))
-                .SetTitle(args.stadiumNameLocKey);
+                .SetOnClickAction(() => OnChooseStadiumButtonClick(args))
+                .SetOnPointerEnterAction(GotItHowToScrollStadiumsInPanel)
+                .SetTitle(args.stadiumNameLocKey)
+                .SetLevelIndex(idx)
+                .SetIsLocked(args.lockedByDefault && SavesController.IsLevelLocked(idx++));
+            buttonView.LevelUnlocked += OnLevelUnlockedByLevelButton;
+            m_StadiumButtonsRtrs.Add(buttonView.GetComponent<RectTransform>());
         }
+        Cor.Run(Cor.WaitNextFrame(KeepStadiumButtonsAspectRatio));
+    }
+
+    private void OnLevelUnlockedByLevelButton(int _LevelIndex)
+    {
+        Time.timeScale = 1f;
+        SavesController.UnlockLevel(_LevelIndex);
     }
     
     private void OnChooseStadiumButtonClick(ChooseStadiumArgs _Args)
     {
         MainData.ChooseStadiumArgs = _Args;
         HideAllPanels();
-        chooseCarPanelObj.SetActive(true);
+        loadingLevelPanelObj.SetActive(true);
+        Cor.Run(Cor.WaitNextFrame(StartLevel));
     }
 
     private void OnLevelSceneLoaded(Scene _Scene, LoadSceneMode _LoadSceneMode)
     {
-        // var carGo = Instantiate(MainData.ChosenCarArgs.Prefab);
-        // var spawnTr = GameObject.FindWithTag("Start Spawn").transform;
-        // carGo.transform.position = spawnTr.position;
-        // carGo.transform.rotation = spawnTr.rotation;
-        var carControllerObjetsToInstantiate = MainData.ChosenCarArgs.CarControllerType switch
+        Cor.Run(Cor.WaitNextFrame(() =>
         {
-            ECarControllerType.RCC => carControllerLevelObjects.rccLevelObjects,
-            ECarControllerType.UCC => carControllerLevelObjects.uccLevelObjects,
-            _                      => throw new SwitchExpressionException(MainData.ChosenCarArgs.CarControllerType)
-        };
-        foreach (var go in carControllerObjetsToInstantiate)
-            Instantiate(go);
+            var carControllerObjetsToInstantiate = MainData.ChosenCarArgs.CarControllerType switch
+            {
+                ECarControllerType.RCC => carControllerLevelObjects.rccLevelObjects,
+                ECarControllerType.UCC => carControllerLevelObjects.uccLevelObjects,
+                _                      => throw new SwitchExpressionException(MainData.ChosenCarArgs.CarControllerType)
+            };
+            foreach (var go in carControllerObjetsToInstantiate)
+                Instantiate(go);
+        }));
         SceneManager.sceneLoaded -= OnLevelSceneLoaded;
     }
 

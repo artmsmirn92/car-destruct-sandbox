@@ -172,17 +172,20 @@ namespace PG
                 if (!GameController.SplitScreen && Input.GetKeyDown (KeyCode.N))
                 {
                     GameController.Instance.SetNextCar ();
+                    LevelManager.Instance.VehicleDamageController =
+                        GameController.Instance.Player1.Car.GetComponent<VehicleDamageController>();
                 }
 
-                if (Input.GetKeyDown (KeyCode.Equals))
+                if (Input.GetKeyDown (KeyCode.B))
                 {
-                    GameController.Instance.ChangeTimeScale (0.1f);
+                    Time.timeScale = Time.timeScale < 1f ? 1f : 0.2f;
+                    // GameController.Instance.ChangeTimeScale (0.1f);
                 }
 
-                if (Input.GetKeyDown (KeyCode.Minus))
-                {
-                    GameController.Instance.ChangeTimeScale (-0.1f);
-                }
+                // if (Input.GetKeyDown (KeyCode.Minus))
+                // {
+                //     GameController.Instance.ChangeTimeScale (-0.1f);
+                // }
             }
 
             if (Input.touchCount == 0 && !Input.GetMouseButton (0))
